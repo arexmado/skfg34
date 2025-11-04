@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <haed>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AREXMADO - Modern Web Experience</title>
+
+    <!-- 외부 라이브러리 -->
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap");
+
+      :root {
+        --bg-dark: radial-gradient(circle at top left, #141e30, #243b55);
+        --bg-light: linear-gradient(120deg, #f0f0f0, #fafafa);
+        --text-dark: #111;
+        --text-light: #fff;
+        --accent: linear-gradient(90deg, #38bdf8, #2563eb);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+        background: var(--bg-dark);
+        color: var(--text-light);
+        overflow-x: hidden;
+        transition: all 0.6s ease;
+      }
+
+      body.light {
+        background: var(--bg-light);
+        color: var(--text-dark);
+      }
+
+      #particles-js {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+      }
+
+      header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 40px;
+        backdrop-filter: blur(20px);
+        background: rgba(255, 255, 255, 0.05);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        z-index: 100;
+      }
+
+      header h1 {
+        font-size: 1.8em;
+        background: var(--accent);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 700;
+      }
+
+      nav a {
+        margin: 0 15px;
+        text-decoration: none;
+        color: inherit;
+        font-weight: 500;
+        transition: color 0.3s ease;
+      }
+
+      nav a:hover {
+        color: #38bdf8;
+      }
+
+      .toggle-theme {
+        position: fixed;
+        top: 50%;
+        right: 20px;
+        background: var(--accent);
+        color: white;
+        border: none;
+        padding: 12px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        z-index: 200;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        transform: translateY(-50%);
+      }
+
+      .toggle-theme:hover {
+        transform: scale(1.05);
+      }
+
+      .hero {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 0 20px;
+      }
+
+      .hero h2 {
+        font-size: 3.2em;
+        background: var(--accent);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 10px;
+      }
+
+      .hero p {
+        font-size: 1.1em;
+        color: #ccc;
+        max-width: 600px;
+        margin-bottom: 30px;
+      }
+
+      .hero button {
+        background: var(--accent);
+        border: none;
+        color: white;
+        padding: 14px 30px;
+        border-radius: 30px;
+        font-size: 1em;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .hero button:hover {
+        transform: scale(1.05);
+      }
+
+      section.features {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        padding: 100px 10%;
+      }
+
+      .feature-card {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        padding: 30px;
+        backdrop-filter: blur(15px);
+        transition: transform 0.3s, box-shadow 0.3s;
+        cursor: pointer;
+        text-align: left;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .feature-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: var(--accent);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.3s ease;
+      }
+
+      .feature-card:hover {
+        transform: scale(1.02);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      }
+
+      .feature-card:hover::before {
+        transform: scaleX(1);
+      }
+
+      .feature-card h3 {
+        font-size: 1.5em;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .feature-card p {
+        color: #ccc;
+        margin-bottom: 20px;
+        line-height: 1.6;
+      }
+
+      .feature-card .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: auto;
+      }
+
+      .feature-card .tag {
+        background: rgba(56, 189, 248, 0.2);
+        padding: 4px 10px;
+        border-radius: 15px;
+        font-size: 0.8em;
+        color: #38bdf8;
+      }
+
+      .feature-card .links {
+        display: flex;
+        gap: 15px;
+        margin-top: 20px;
+      }
+
+      .feature-card .links a {
+        color: inherit;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.9em;
+        transition: color 0.3s;
+      }
+
+      .feature-card .links a:hover {
+        color: #38bdf8;
+      }
+
+      footer {
+        text-align: center;
+        padding: 30px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        color: #aaa;
+        margin-top: auto;
+      }
+
+      /* 팝업 스타일 */
+      .popup {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        visibility: hidden;
+        opacity: 0;
+        transition: all 0.4s ease;
+        z-index: 500;
+      }
+
+      .popup.active {
+        visibility: visible;
+        opacity: 1;
+      }
+
+      .popup-content {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(20px);
+        padding: 40px;
+        border-radius: 20px;
+        text-align: center;
+        color: white;
+        max-width: 400px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        animation: zoomIn 0.4s ease;
+      }
+
+      @keyframes zoomIn {
+        from {
+          transform: scale(0.8);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      .popup button {
+        margin-top: 20px;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        background: var(--accent);
+        color: white;
+        cursor: pointer;
+      }
+
+      /* 소개 섹션 스타일 */
+      .about-section {
+        padding: 100px 10%;
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      .about-container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .about-section h2 {
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 50px;
+        background: var(--accent);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .about-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 50px;
+        align-items: start;
+      }
+
+      .about-text p {
+        margin-bottom: 20px;
+        line-height: 1.6;
+      }
+
+      .skills h3 {
+        margin-bottom: 20px;
+        font-size: 1.5em;
+      }
+
+      .skill-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .skill-tags span {
+        background: var(--accent);
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 0.9em;
+      }
+
+      /* 연락 섹션 스타일 */
+      .contact-section {
+        padding: 100px 10%;
+      }
+
+      .contact-container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .contact-section h2 {
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 50px;
+        background: var(--accent);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .contact-content {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 50px;
+      }
+
+      .contact-info {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .contact-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .contact-item .icon {
+        font-size: 1.5em;
+      }
+
+      .contact-item a {
+        color: inherit;
+        text-decoration: none;
+        transition: color 0.3s;
+      }
+
+      .contact-item a:hover {
+        color: #38bdf8;
+      }
+
+      .contact-form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .contact-form input,
+      .contact-form textarea {
+        padding: 15px;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.05);
+        color: inherit;
+        font-family: inherit;
+      }
+
+      .contact-form textarea {
+        height: 150px;
+        resize: vertical;
+      }
+
+      .contact-form button {
+        background: var(--accent);
+        color: white;
+        border: none;
+        padding: 15px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: transform 0.3s;
+      }
+
+      .contact-form button:hover {
+        transform: scale(1.05);
+      }
+
+      /* 반응형 스타일 */
+      @media (max-width: 900px) {
+        .about-content,
+        .contact-content {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 600px) {
+        header {
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        .toggle-theme {
+          top: auto;
+          bottom: 20px;
+          right: 20px;
+          transform: none;
+          width: 45px;
+          height: 45px;
+          padding: 10px;
+        }
+
+        .about-section,
+        .contact-section {
+          padding: 60px 5%;
+        }
+
+        .skill-tags {
+          justify-content: center;
+        }
+      }
+    </style>
+  </haed>
+  <body>
+    <header>
+      
+    </header>
+    <main>
+      
+    </main>
+    <footer>
+      
+    </footer>
+  </body>
+</html>
